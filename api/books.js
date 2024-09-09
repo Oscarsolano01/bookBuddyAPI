@@ -5,7 +5,11 @@ const {
   createBook,
   deleteBook,
   updateBook,
-} = require("../db/books");
+} = require("../db");
+
+const { createReservation } = require("../db/reservations");
+const { requireUser } = require("./utils");
+
 //create a router object for the /books routes
 
 const bookRouter = express.Router();
@@ -43,7 +47,7 @@ bookRouter.get("/:id", async (req, res, next) => {
   }
 });
 
-bookRouter.post("/", async (req, res) => {
+bookRouter.post("/", requireUser, async (req, res) => {
   try {
     const result = await createBook(req.body);
     console.log(result);
@@ -54,7 +58,7 @@ bookRouter.post("/", async (req, res) => {
   }
 });
 
-bookRouter.delete("/", async (req, res) => {
+bookRouter.delete("/:id", requireUser, async (req, res) => {
   try {
     const result = await deleteBook(req.params.id);
     res.send({ message: "book deleted successfully", id: result });
@@ -63,7 +67,8 @@ bookRouter.delete("/", async (req, res) => {
   }
 });
 
-bookRouter.patch("/:id", async (req, res, next) => {
+bookRouter.patch("/:id", requireUser, async (req, res, next) => {
+  console.log("user", req.user);
   try {
     const id = Number(req.params.id);
 
@@ -82,15 +87,15 @@ bookRouter.patch("/:id", async (req, res, next) => {
     } else {
       const updated = await updateBook(req.params.id, req.body.available);
       if (updated) {
+        await createReservation({ userId: req.user.id, booksId: updated.id });
         res.send({
           message: " updated successfully",
           updated,
         });
-
-      }else{
+      } else {
         next({
-          name:"UpdateError",
-          message:"There was an error updating this book.",
+          name: "UpdateError",
+          message: "There was an error updating this book.",
         });
         return;
       }

@@ -34,6 +34,9 @@ apiRouter.use(async (req, res, next) => {
 
 apiRouter.use("/users", require("./users"));
 apiRouter.use("/books", require("./books"));
+
+// registers routes for requests
+apiRouter.use("/reservations", require("./reservations"));
 //baseurl/api
 apiRouter.get("/", (req, res) => {
   res.send("Hello from /api");
