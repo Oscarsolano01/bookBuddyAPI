@@ -49,7 +49,7 @@ reservationsRouter.delete("/:id", requireUser, async (req, res, next) => {
 
       const book = await getBook(deletedReservation.bookid);
       if (deletedReservation) {
-        updateBook(book.id, true);
+        await updateBook(book.id, true);
       }
       res.send({ deletedReservation });
     }
