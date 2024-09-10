@@ -152,7 +152,7 @@ const seedDatabase = async () => {
     await createReservation({ userId: 1, booksId: 1 });
     console.log(await getReservation(1));
     // await deleteReservation(1);
-    console.log("DELETING");
+    // console.log("DELETING");
   } catch (err) {
     console.log(err);
   } finally {

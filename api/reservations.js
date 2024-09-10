@@ -46,15 +46,13 @@ reservationsRouter.delete("/:id", requireUser, async (req, res, next) => {
       // -- if they DO match, two things - delete the reservation (using deleteReservation function), confirm
       // ---that the deletion was successful AND THEN update the book to be available again (set available:true);
       const deletedReservation = await deleteReservation(req.params.id);
-
+      console.log("DELETED: ", deletedReservation);
       const book = await getBook(deletedReservation.bookid);
       if (deletedReservation) {
         await updateBook(book.id, true);
       }
-      res.send({ deletedReservation });
+      res.status(202).send({ message: "deleted", deletedReservation });
     }
-
-    res.send("deleted");
   } catch (err) {
     next(err);
   }
