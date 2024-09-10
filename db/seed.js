@@ -5,7 +5,7 @@ const { createUser, getUserByEmail } = require("./users");
 const { createBook, getBooks } = require("./books");
 const {
   createReservation,
-  getReservations,
+  getReservation,
   deleteReservation,
 } = require("./reservations");
 
@@ -107,7 +107,7 @@ const createTables = async () => {
         )`);
 
     await client.query(`CREATE TABLE reservations( id SERIAL PRIMARY KEY,
-        booksid INTEGER REFERENCES books(id),userid INTEGER REFERENCES users(id))`);
+        bookid INTEGER REFERENCES books(id),userid INTEGER REFERENCES users(id))`);
   } catch (err) {
     console.log(err);
   }
@@ -150,9 +150,9 @@ const seedDatabase = async () => {
     console.log("INSERTING BOOKS...");
     await insertBooks();
     await createReservation({ userId: 1, booksId: 1 });
-    console.log(await getReservations(1));
-    await deleteReservation(1);
-    console.log(await getReservations);
+    console.log(await getReservation(1));
+    // await deleteReservation(1);
+    console.log("DELETING");
   } catch (err) {
     console.log(err);
   } finally {
