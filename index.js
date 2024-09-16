@@ -9,6 +9,8 @@ const client = require("./db/client");
 
 client.connect();
 
+server.use(cors());
+
 console.log(process.env.JWT_SECRET);
 // app.use(express.json());
 
